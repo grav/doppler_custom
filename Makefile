@@ -13,8 +13,8 @@ all: $(PROJ).rpt $(PROJ).bin header
 	arachne-pnr -d 5k  -o $@ -p $^ -P sg48
 
 header: $(PROJ).bin
-	xxd -i $(PROJ).bin  > $(PROJ).h
-	sed -i -r 's/unsigned/const unsigned/g' $(PROJ).h
+	xxd -i $(PROJ).bin  > $(PROJ)_arduino/$(PROJ).h
+	sed -i -r 's/unsigned/const unsigned/g' $(PROJ)_arduino/$(PROJ).h
 	#cp $(PROJ).blif $(PROJ)_.blif
 
 %.bin: %.asc
@@ -32,6 +32,6 @@ sudo-prog: $(PROJ).bin
 	iCEburn.py  -e -v -w  $<
 
 clean:
-	rm -f $(PROJ).blif $(PROJ).asc $(PROJ).rpt $(PROJ).bin $(PROJ).h
+	rm -f $(PROJ).blif $(PROJ).asc $(PROJ).rpt $(PROJ).bin $(PROJ)_arduino/$(PROJ).h
 
 .PHONY: all prog clean
