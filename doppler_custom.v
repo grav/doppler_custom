@@ -131,8 +131,14 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 	// Led
 	wire [3:0]  kled_tri;			// connect katode via SB_IO modules to allow high impadance  or 3.3V
 	reg [15:0] data16	;			// data register for 16 leds
- 	LED16  myleds (.clk(clk),	.ledbits(data16)	,  .aled(aled), .kled_tri(kled_tri) );
- 		
+ 	
+	// LED16 myleds (.clk(clk),	.ledbits(data16)	,  .aled(aled), .kled_tri(kled_tri) );
+	
+	// Just blink! 
+	Blink myleds (.clk(clk),	.ledbits(data16)	,  .aled(aled), .kled_tri(kled_tri) );
+	
+
+
 		
 endmodule		// end top module
 
@@ -141,7 +147,6 @@ endmodule		// end top module
 // we need to use tri state outputs to avoid bad polarity for LED´s 
 // just set Pins to static 1 and control by output_enable wire 
 module LED16 (input wire clk, input  [15:0] ledbits , output reg  [3:0] aled ,  output reg  [3:0] kled_tri );
-
 	reg [31:0] counter;  // = 32'h00000000;	
 	always @(posedge clk)	begin
 			counter<=counter+1 ; 
@@ -167,6 +172,20 @@ module LED16 (input wire clk, input  [15:0] ledbits , output reg  [3:0] aled ,  
 			4'b1110:		begin   kled_tri[3:0]  <= ledbits[14] ? 4'b1000 :  4'd0;	 	   aled[3:0] <=	 4'b1011; 	end	
 			4'b1111:   	begin   kled_tri[3:0]  <= ledbits[15] ? 4'b1000 :  4'd0;	 	   aled[3:0] <=	 4'b0111;	end	
 		endcase
+	end
+endmodule
+
+module Blink (input wire clk, input  [15:0] ledbits , output reg  [3:0] aled ,  output reg  [3:0] kled_tri );
+	reg led_on;	
+	reg [25:0] counter; 
+	always @(posedge clk)	begin
+			counter<=counter+1 ; 
+	end
+ 
+	// Just blink  
+	always @(posedge counter[25])	begin // do the logic
+		led_on = !led_on;
+		kled_tri[3:0] <= led_on ? 4'b0001 :  4'd0;
 	end
 endmodule
 
