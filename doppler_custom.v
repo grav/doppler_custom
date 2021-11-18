@@ -1,6 +1,6 @@
 `default_nettype none
 
-module top1 ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
+module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
      inout  [7:0] pinbank2,             // breakout io pins F41,  F40 , F39, F38, F37, F36, F35, F34
      output  [3:0] kled  , output [3:0]  aled,        // led matrix  see the .pcf file in projectfolder for physical pins
      input button1,   input button2,          // 2 Buttons 
@@ -120,10 +120,10 @@ module top1 ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 ,
   wire [9:0] sine_out;
   wire [9:0] pdm_sine_err;
   wire [9:0] pdm_saw_err;
-  wire LED1;
+  reg LED1;
 
   // why 100.000 and not 100.000.000?
-  saw #(.CLKSPEED(100_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
+  saw #(.CLKSPEED(1_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
   pdm p1(.clk(clk),.din(saw_out),.rst(button1),.dout(LED1),.error(pdm_saw_err));    
   LED16 myleds (.clk(clk), .ledbits(data16) ,  .aled(aled), .kled_tri(kled_tri) );
 
@@ -131,6 +131,7 @@ module top1 ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 ,
 //   // pdm p2(.clk(clk),.din(sine_out),.rst(button1),.dout(LED2),.error(pdm_sine_err));    
  assign cfg_so = miso_shift[15];
  always @(posedge clk) begin
+  //  data16 <= 1 ? 23 : 0;
   if(spi_cs_posedge) begin
    data16    <= spi_in;       // Just Write data 2 LED
   end else if(spi_cs_negedge) begin
@@ -142,7 +143,6 @@ module top1 ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 ,
    if(spi_clk_posedge)  miso_shift[15:0]  <= {miso_shift[14:0] ,  1'b1};
   end
 
-  kled_tri[3:0] <= LED1 ? 4'b0001 :  4'd0;
 
  end
   
@@ -311,7 +311,6 @@ module top2 ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 ,
  reg [15:0]  miso_shift;
  assign cfg_so = miso_shift[15];
  always @(posedge clk) begin
-   data16  
   if(spi_cs_posedge) begin
    data16    <= spi_in;       // Just Write data 2 LED
   end else if(spi_cs_negedge) begin
