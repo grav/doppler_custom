@@ -131,7 +131,7 @@ module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , 
 //   // pdm p2(.clk(clk),.din(sine_out),.rst(button1),.dout(LED2),.error(pdm_sine_err));    
  assign cfg_so = miso_shift[15];
  always @(posedge clk) begin
-  //  data16 <= 1 ? 23 : 0;
+  //  data16 <= LED1 ? 23 : 0; // doesn't work for some reason
   if(spi_cs_posedge) begin
    data16    <= spi_in;       // Just Write data 2 LED
   end else if(spi_cs_negedge) begin
