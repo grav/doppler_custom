@@ -120,6 +120,9 @@ module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , 
    if(spi_clk_posedge)  spi_in[15:0]    <= {spi_in[14:0] ,    mosi};
    if(spi_clk_posedge)  miso_shift[15:0]  <= {miso_shift[14:0] ,  1'b1};
   end
+
+  // kled_tri[3:0] <= LED1 ? 4'b0001 :  4'd0;
+
  end
  
 
@@ -127,11 +130,50 @@ module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , 
  wire [3:0]  kled_tri;   // connect katode via SB_IO modules to allow high impadance  or 3.3V
  reg [15:0] data16 ;   // data register for 16 leds
   
+ wire [9:0] saw_out;
+  wire [9:0] sine_out;
+  wire [9:0] pdm_sine_err;
+  wire [9:0] pdm_saw_err;
+  wire LED1;
 
+  // why 100.000 and not 100.000.000?
+  saw #(.CLKSPEED(100_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
+  pdm p1(.clk(clk),.din(saw_out),.rst(button1),.dout(LED1),.error(pdm_saw_err));    
+
+//   // sine_gen#(.CLKSPEED(100_000),.FREQ(2)) s2(.clk(clk),.out(sine_out));
+//   // pdm p2(.clk(clk),.din(sine_out),.rst(button1),.dout(LED2),.error(pdm_sine_err));    
 
 
   
 endmodule  // end top module
+
+module saw (input clk, output reg[9:0] out);
+parameter NBITS = 10;
+parameter CLKSPEED = 100_000_000;// clockspeed of Nexys A7
+parameter FREQ = 440; // something audiable
+
+
+ // something audiable
+localparam AMPMAX = 2**NBITS-1;
+localparam CLKDIV = CLKSPEED/FREQ;
+
+reg[26:0] clk_counter = 0;
+reg[NBITS-1:0] amp = AMPMAX;
+
+always@(posedge clk) begin
+
+    if (clk_counter < CLKDIV) clk_counter <= clk_counter+1;
+    else begin
+        clk_counter <= 0;
+        if (amp  > 0) amp <= amp - 1;
+        else amp <= AMPMAX;
+    end
+    
+end
+always@(posedge clk) begin
+    out <= amp;//(pwm_counter < 50) ? 1 : 0;
+end
+endmodule 
 
 
 module sigled(input wire CLK100MHZ, input wire SW0, output reg dbg_0,output wire LED1,output wire LED2);
