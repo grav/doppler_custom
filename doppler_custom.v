@@ -21,49 +21,6 @@ module top (
   SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) led_io2 ( .PACKAGE_PIN(kled[1]), .OUTPUT_ENABLE(kled_tri[1]), .D_OUT_0(1'b1)  ); 
   SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) led_io3 ( .PACKAGE_PIN(kled[2]), .OUTPUT_ENABLE(kled_tri[2]), .D_OUT_0(1'b1)  );
   SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) led_io4 ( .PACKAGE_PIN(kled[3]), .OUTPUT_ENABLE(kled_tri[3]), .D_OUT_0(1'b1)  );
-
-  // Make connections from Pins in top tu Registers and support INPUT/ OUTPUT arrays
-  reg [23:0] pin_state_out ;
-  wire [23:0] pin_state_in;
-  reg  [23:0] out_eneable_cfg;
-
-  
-  // see this https://youtu.be/IOmG5y7VMrg?t=49m32s (german only)
-  // Cross Domain Clock Syncing! SPI_INCOMING_CLK
-  reg spi_clk1,spi_clk2;
-  wire spi_clk_negedge = ( ~spi_clk1 &&  spi_clk2)  ;
-  wire spi_clk_posedge = (  spi_clk1 && ~spi_clk2)  ;
-  always @(posedge clk) begin
-   spi_clk1 <= cfg_sck;
-   spi_clk2 <= spi_clk1;
-  end
- 
-  // Cross Domain Clock Syncing! SPI_INCOMING_CS + register Set
-  reg spi_cs1,spi_cs2;
-  wire spi_cs_negedge = ( ~spi_cs1 &&  spi_cs2)  ;
-  wire spi_cs_posedge = (  spi_cs1 && ~spi_cs2)  ;
-  always @(posedge clk) begin
-   spi_cs1 <= cfg_cs;
-   spi_cs2 <= spi_cs1;
-  end 
-  
-  // Cross Domain Clock Syncing! SPI_INCOMING_MOSI + register Set
-  reg spi_mosi1,spi_mosi2;
-  wire spi_mosi_negedge = ( ~spi_mosi1 &&  spi_mosi2)  ;
-  wire spi_mosi_posedge = (  spi_mosi1 && ~spi_mosi2)  ;
-  always @(posedge clk) begin
-   spi_mosi1 <= cfg_si;
-   spi_mosi2 <= spi_mosi1;
-  end
-  reg mosi;
-  always @(posedge clk) begin
-   if(spi_mosi_posedge) mosi<= 1'b1;
-   else if(spi_mosi_negedge) mosi<= 1'b0;
-  end
- 
-  // Spi Shifter
-  reg [15:0] spi_in;
-  reg [15:0] miso_shift;
   
   // Led
   wire [3:0] kled_tri;   // connect katode via SB_IO modules to allow high impadance  or 3.3V
@@ -76,27 +33,17 @@ module top (
   wire LED1;
 
   // why 50.000 and not 50.000.000?
-  saw #(.CLKSPEED(50_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
+  saw #(.CLKSPEED(50_000),.FREQ(3)) s1(.clk(clk),.out(saw_out));
   // putting eg `button1` as `.rst` param produces weird results,
   // so disabling reset by putting constant 0
   pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
   LED16 myleds (.clk(clk), .ledbits(data16) ,  .aled(aled), .kled_tri(kled_tri) );
 
-  assign cfg_so = miso_shift[15];
   always @(posedge clk) begin
     // 23 is just a random value to light up a few leds 
     data16 <= LED1 ? 23 : 0; 
 
-    if(spi_cs_posedge) begin
-    //  data16    <= spi_in;       // Just Write data 2 LED
-    end else if(spi_cs_negedge) begin
-     // miso_shift  <= data16;      // loopbackTest
-     miso_shift  <= pin_state_in[15:0]; // PinRead
-     //miso_shift  <= 16'h53f0;     // constValues answer just for tesing
-    end else begin
-     if(spi_clk_posedge)  spi_in[15:0]    <= {spi_in[14:0] ,    mosi};
-     if(spi_clk_posedge)  miso_shift[15:0]  <= {miso_shift[14:0] ,  1'b1};
-    end
+
   end
   
 endmodule  // end top module
