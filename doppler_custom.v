@@ -72,18 +72,18 @@ module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , 
   wire [9:0] sine_out;
   wire [9:0] pdm_sine_err;
   wire [9:0] pdm_saw_err;
-  reg LED1;
+  wire LED1;
 
   // why 100.000 and not 100.000.000?
-  saw #(.CLKSPEED(1_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
+  saw #(.CLKSPEED(1000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
   pdm p1(.clk(clk),.din(saw_out),.rst(button1),.dout(LED1),.error(pdm_saw_err));    
   LED16 myleds (.clk(clk), .ledbits(data16) ,  .aled(aled), .kled_tri(kled_tri) );
 
   assign cfg_so = miso_shift[15];
   always @(posedge clk) begin
-    //  data16 <= LED1 ? 23 : 0; // doesn't work for some reason
+     data16 <= LED1 ? 23 : 0; 
     if(spi_cs_posedge) begin
-     data16    <= spi_in;       // Just Write data 2 LED
+    //  data16    <= spi_in;       // Just Write data 2 LED
     end else if(spi_cs_negedge) begin
      // miso_shift  <= data16;      // loopbackTest
      miso_shift  <= pin_state_in[15:0]; // PinRead
