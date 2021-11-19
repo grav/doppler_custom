@@ -1,15 +1,16 @@
 `default_nettype none
 
-module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
-     inout  [7:0] pinbank2,             // breakout io pins F41,  F40 , F39, F38, F37, F36, F35, F34
-     output  [3:0] kled  , output [3:0]  aled,        // led matrix  see the .pcf file in projectfolder for physical pins
-     input button1,   input button2,          // 2 Buttons 
-     input cfg_cs,   input  cfg_si,  input cfg_sck,    // SPI:     samd51 <-> ice40  for bitstream and user cases
-     output cfg_so,               // SPI Out
-     inout pa19, inout pa21, inout pa22,       // alternat SPI Port
-     inout pa20,
-     inout F25, F32
-      );            
+module top ( 
+  inout [7:0] pinbank1, // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
+  inout  [7:0] pinbank2, // breakout io pins F41,  F40 , F39, F38, F37, F36, F35, F34
+  output  [3:0] kled, output [3:0] aled, // led matrix  see the .pcf file in projectfolder for physical pins
+  input button1, input button2, // 2 Buttons 
+  input cfg_cs, input  cfg_si, input cfg_sck, // SPI:     samd51 <-> ice40  for bitstream and user cases
+  output cfg_so, // SPI Out
+  inout pa19, inout pa21, inout pa22,// alternat SPI Port
+  inout pa20,
+  inout F25, F32
+);            
  
   // use ice40up5k 48Mhz internal oscillator
   wire clk; 
@@ -56,16 +57,16 @@ module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , 
   end
   reg mosi;
   always @(posedge clk) begin
-   if(spi_mosi_posedge)    mosi<= 1'b1;
-   else if(spi_mosi_negedge)  mosi<= 1'b0;
+   if(spi_mosi_posedge) mosi<= 1'b1;
+   else if(spi_mosi_negedge) mosi<= 1'b0;
   end
  
   // Spi Shifter
-  reg [15:0]  spi_in;
-  reg [15:0]  miso_shift;
+  reg [15:0] spi_in;
+  reg [15:0] miso_shift;
   
   // Led
-  wire [3:0]  kled_tri;   // connect katode via SB_IO modules to allow high impadance  or 3.3V
+  wire [3:0] kled_tri;   // connect katode via SB_IO modules to allow high impadance  or 3.3V
   reg [15:0] data16 ;   // data register for 16 leds
    
   wire [9:0] saw_out;
@@ -92,7 +93,7 @@ module top ( inout  [7:0] pinbank1,             // breakout io pins F11,  F12 , 
      if(spi_clk_posedge)  spi_in[15:0]    <= {spi_in[14:0] ,    mosi};
      if(spi_clk_posedge)  miso_shift[15:0]  <= {miso_shift[14:0] ,  1'b1};
     end
-   end
+  end
   
 endmodule  // end top module
 
