@@ -74,11 +74,12 @@ module top (
   wire [9:0] pdm_sine_err;
   wire [9:0] pdm_saw_err;
   wire LED1;
-  reg foo = 0;
 
   // why 100.000 and not 100.000.000?
   saw #(.CLKSPEED(100_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
-  pdm p1(.clk(clk),.din(saw_out),.rst(foo),.dout(LED1),.error(pdm_saw_err));    
+  // putting eg `button1` as `.rst` param produces weird results,
+  // so disabling reset by putting constant 0
+  pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
   LED16 myleds (.clk(clk), .ledbits(data16) ,  .aled(aled), .kled_tri(kled_tri) );
 
   assign cfg_so = miso_shift[15];
