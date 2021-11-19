@@ -75,8 +75,8 @@ module top (
   wire [9:0] pdm_saw_err;
   wire LED1;
 
-  // why 100.000 and not 100.000.000?
-  saw #(.CLKSPEED(100_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
+  // why 50.000 and not 50.000.000?
+  saw #(.CLKSPEED(50_000),.FREQ(2)) s1(.clk(clk),.out(saw_out));
   // putting eg `button1` as `.rst` param produces weird results,
   // so disabling reset by putting constant 0
   pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
