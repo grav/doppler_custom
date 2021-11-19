@@ -84,6 +84,7 @@ module top (
 
   assign cfg_so = miso_shift[15];
   always @(posedge clk) begin
+    // 23 is just a random value to light up a few leds 
     data16 <= LED1 ? 23 : 0; 
 
     if(spi_cs_posedge) begin
