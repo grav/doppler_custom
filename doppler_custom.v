@@ -31,22 +31,63 @@ module top (
   wire [9:0] pdm_sine_err;
   wire [9:0] pdm_saw_err;
   wire LED1;
+  wire LED2;
 
   // why 50.000 and not 50.000.000?
-  saw #(.CLKSPEED(50_000),.FREQ(3)) s1(.clk(clk),.out(saw_out));
+  saw #(.CLKSPEED(50_000),.FREQ(1)) s1(.clk(clk),.out(saw_out));
   // putting eg `button1` as `.rst` param produces weird results,
   // so disabling reset by putting constant 0
   pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
-  LED16 myleds (.clk(clk), .ledbits(data16) ,  .aled(aled), .kled_tri(kled_tri) );
+  
+  
+  
+  sine_gen#(.CLKSPEED(50_000),.FREQ(1)) s2(.clk(clk),.out(sine_out));
+  pdm p2(.clk(clk),.din(sine_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
+  
+  LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
 
   always @(posedge clk) begin
-    // 23 is just a random value to light up a few leds 
-    data16 <= LED1 ? 23 : 0; 
-
-
+    data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
+    
   end
   
 endmodule  // end top module
+
+
+module sine_gen(
+    input clk ,
+    output reg [9:0] out
+    );
+parameter CLKSPEED = 100_000_000;// clockspeed of Nexys A7
+parameter FREQ = 440; // something audiable
+localparam SIZE = 1024;    
+
+localparam CLKDIV = CLKSPEED/FREQ;
+reg[26:0] clk_counter = 0;
+
+reg [9:0] rom_memory [SIZE-1:0];
+integer i;
+initial begin
+    $readmemh("sine.mem", rom_memory); //File with the signal
+    i = 0;
+end    
+
+always@(posedge clk)
+begin
+    if (clk_counter < CLKDIV) clk_counter <= clk_counter+1;
+    else begin
+        clk_counter <= 0;
+        i = i + 1;
+        if(i == SIZE)
+            i = 0;
+    end
+end
+
+always@(posedge clk) begin
+    out <= rom_memory[i];
+end
+
+endmodule
 
 module square(input clk, output reg[9:0] out);
   reg[26:0] clk_counter = 0;
