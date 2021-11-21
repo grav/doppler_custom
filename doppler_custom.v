@@ -33,14 +33,22 @@ module top (
   wire LED1;
   wire LED2;
 
-  saw #(.CLKSPEED(50_000_000),.FREQ(1)) s1(.clk(clk),.out(saw_out));
+  localparam clockspeed = 50_000_000;
+
+  saw #(.CLKSPEED(100_000_000),.FREQ(1)) s1(.clk(clk),.out(saw_out));
   // putting eg `button1` as `.rst` param produces weird results,
   // so disabling reset by putting constant 0
   pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
   
   
   
-  sine_gen#(.CLKSPEED(50_000_000),.FREQ(1)) s2(.clk(clk),.out(sine_out));
+  sine_gen#(.CLKSPEED(clockspeed), .FREQ(4), .MAX_FREQ_MOD(1024) ) 
+  s2(
+    .clk(clk),
+    .freq_mod(saw_out),
+    .out(sine_out)
+    );
+  
   pdm p2(.clk(clk),.din(sine_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
   
   LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
@@ -54,16 +62,18 @@ endmodule  // end top module
 
 
 module sine_gen(
-    input clk ,
+    input clk,
+    input wire[9:0] freq_mod,
     output reg [9:0] out
     );
+parameter MAX_FREQ_MOD = 1024; // frequency amp divisor (aka max freq. mod amp)
 parameter CLKSPEED = 100_000_000;// clockspeed of Nexys A7
 parameter FREQ = 440; // something audiable
-localparam SIZE = 1024;    
+localparam SIZE = 1024; // size of sample memory (one cycle)
 
-localparam CLKDIV = CLKSPEED/FREQ/SIZE;
+// localparam CLKDIV = CLKSPEED/FREQ/SIZE;
 reg[26:0] clk_counter = 0;
-
+reg[26:0] clk_div;
 reg [9:0] rom_memory [SIZE-1:0];
 integer i;
 initial begin
@@ -71,9 +81,16 @@ initial begin
     i = 0;
 end    
 
+always @(posedge clk) 
+begin
+  // clk_div <=11482;// (CLKSPEED / SIZE * MAX_FREQ_MOD) / (freq_mod * FREQ);
+  // clk_div <= (CLKSPEED / SIZE * MAX_FREQ_MOD) / (512 * FREQ);
+  clk_div <= 50000000 / (freq_mod * FREQ);
+end
+
 always@(posedge clk)
 begin
-    if (clk_counter < CLKDIV) clk_counter <= clk_counter+1;
+    if (clk_counter < clk_div) clk_counter <= clk_counter+1;
     else begin
         clk_counter <= 0;
         i = i + 1;
