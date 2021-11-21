@@ -33,15 +33,14 @@ module top (
   wire LED1;
   wire LED2;
 
-  // why 50.000 and not 50.000.000?
-  saw #(.CLKSPEED(50_000),.FREQ(1)) s1(.clk(clk),.out(saw_out));
+  saw #(.CLKSPEED(50_000_000),.FREQ(1)) s1(.clk(clk),.out(saw_out));
   // putting eg `button1` as `.rst` param produces weird results,
   // so disabling reset by putting constant 0
   pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
   
   
   
-  sine_gen#(.CLKSPEED(50_000),.FREQ(1)) s2(.clk(clk),.out(sine_out));
+  sine_gen#(.CLKSPEED(50_000_000),.FREQ(1)) s2(.clk(clk),.out(sine_out));
   pdm p2(.clk(clk),.din(sine_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
   
   LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
@@ -62,7 +61,7 @@ parameter CLKSPEED = 100_000_000;// clockspeed of Nexys A7
 parameter FREQ = 440; // something audiable
 localparam SIZE = 1024;    
 
-localparam CLKDIV = CLKSPEED/FREQ;
+localparam CLKDIV = CLKSPEED/FREQ/SIZE;
 reg[26:0] clk_counter = 0;
 
 reg [9:0] rom_memory [SIZE-1:0];
@@ -104,7 +103,7 @@ parameter FREQ = 440; // something audiable
 
  // something audiable
 localparam AMPMAX = 2**NBITS-1;
-localparam CLKDIV = CLKSPEED/FREQ;
+localparam CLKDIV = CLKSPEED/FREQ/AMPMAX;
 
 reg[26:0] clk_counter = 0;
 reg[NBITS-1:0] amp = AMPMAX;
