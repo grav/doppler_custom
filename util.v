@@ -1,7 +1,7 @@
 module MYSPI ( input clk,
 					input cfg_cs,  	input  cfg_si,  input cfg_sck,				// SPI:     samd51 <-> ice40  for bitstream and user cases
 					output cfg_so,															// SPI Out
-					 output reg [15:0] data
+					 output [15:0] data16
                      );												
 	
 	// use ice40up5k 48Mhz internal oscillator
