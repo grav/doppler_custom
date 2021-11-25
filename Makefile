@@ -7,7 +7,7 @@ all: $(PROJ).rpt $(PROJ).bin header
 
 %.blif: %.v
 
-	yosys -v 3 -p 'synth_ice40  -top top -blif $@' $<
+	yosys -v 3 -p 'synth_ice40  -top top -blif $@' $< synthlib.v
 
 %.asc: $(PIN_DEF) %.blif
 	arachne-pnr -d 5k  -o $@ -p $^ -P sg48
