@@ -5,9 +5,9 @@ module MYSPI ( input clk,
                      );												
 	
 	// use ice40up5k 48Mhz internal oscillator
-	wire clk; 
+	// wire clk; 
 	//wire clk48; 
-	SB_HFOSC inthosc ( .CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(clk) );
+	// SB_HFOSC inthosc ( .CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(clk) );
 	// pll my100mhz(.clock_in(clk48), .clock_out(clk) /* , output locked */ );
 
 
