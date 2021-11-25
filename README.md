@@ -18,8 +18,8 @@ Can also be build directly, if `icestorm` and `arache-pnr` are installed
 ## scripts
 `make.sh` - compile fpga AND arduino project, upload to doppler.
 
-Eg: `$ PROJ=doppler_custom ./make.sh` FPGA project in [doppler_custom.v] and
-arduino project in [doppler_custom_arduino/doppler_custom_arduino.ino]
+Eg: `$ PROJ=doppler_custom ./make.sh` FPGA project in [doppler_custom.v](doppler_custom.v) and
+arduino project in [doppler_custom_arduino/doppler_custom_arduino.ino](doppler_custom_arduino/doppler_custom_arduino.ino)
 
 Or: `$ PROJ=miditest ./make.sh`
 
