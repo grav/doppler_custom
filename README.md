@@ -22,5 +22,5 @@ Eg: `$ PROJ=doppler_custom ./make.sh` FPGA project in [doppler_custom.v](doppler
 arduino project in [doppler_custom_arduino/doppler_custom_arduino.ino](doppler_custom_arduino/doppler_custom_arduino.ino)
 
 Or: `$ PROJ=miditest ./make.sh`
-
-- `playmidi.sh`
+ 
+`playmidi.sh` - play a midi file to the Doppler
