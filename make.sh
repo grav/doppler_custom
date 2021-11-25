@@ -9,3 +9,4 @@ make clean; make PROJ="$PROJ"
 ## "Fully qualified board name" and port found with `arduino-cli board list`
 FQBN="dadamachines - M4:samd:doppler"
 ( cd "${PROJ}_arduino" && arduino-cli compile --fqbn "$FQBN" && arduino-cli upload --fqbn "$FQBN" --port /dev/ttyACM0 )
+
