@@ -55,20 +55,27 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
     .freq_mod(saw_out),
     .out(sine_out)
     );
+
+  reg [15:0] spi_out;
+
+  MYSPI myspi(.clk(clk),.cfg_cs(cfg_cs), 
+    .cfg_si(cfg_si),
+    .cfg_sck(cfg_sck),
+    .cfg_so(cfg_so),
+    .data16(spi_out));
+
+  wire amp_in;
+  wire [9:0] amp_out;
+  Amp amp(.clk(clk),.in(sine_out),.amp(amp_in),.out(amp_out));
   
-  pdm p2(.clk(clk),.din(sine_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
+  pdm p2(.clk(clk),.din(amp_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
   
 
-	//  MYSPI myspi(.clk(clk),.cfg_cs(cfg_cs), 
-	//  .cfg_si(cfg_si),
-	//  .cfg_sck(cfg_sck),
-	//  .cfg_so(cfg_so),
-	//  .data16(data16));
 	 LED16  myleds (.clk(clk),	.ledbits(data16)	,  .aled(aled), .kled_tri(kled_tri) );
 
    always @(posedge clk) begin
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
-    
+    amp_in <= spi_out > 0;
   end		
 		
 endmodule		// end top module

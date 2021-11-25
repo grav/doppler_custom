@@ -1,3 +1,16 @@
+module Amp(
+  input clk,
+  input wire amp,
+  input wire[9:0] in,
+  output reg[9:0] out
+);
+parameter MAX_AMP = 1024;
+always @(posedge clk) begin
+  out <= in * amp;
+end
+
+endmodule
+
 module sine_gen(
     input clk,
     input wire[9:0] freq_mod,
