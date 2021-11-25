@@ -14,3 +14,13 @@ Can also be build directly, if `icestorm` and `arache-pnr` are installed
 - Removed weird upload of default firmware (`ice40.upload()`)
 - Added make.sh to build in Docker with correct permissions
 - Removed need for renaming var in `.h` file
+
+## scripts
+`make.sh` - compile fpga AND arduino project, upload to doppler.
+
+Eg: `$ PROJ=doppler_custom ./make.sh` FPGA project in [doppler_custom.v] and
+arduino project in [doppler_custom_arduino/doppler_custom_arduino.ino]
+
+Or: `$ PROJ=miditest ./make.sh`
+
+- `playmidi.sh`
