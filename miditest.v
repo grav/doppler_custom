@@ -41,8 +41,10 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 
   localparam clockspeed = 50_000_000;
 
+  wire rst;
+
   // douple clock speed to get lower than 1 freq (0.5Hz)
-  saw #(.CLKSPEED(clockspeed*2),.FREQ(1)) s1(.clk(clk),.out(saw_out));
+  saw #(.CLKSPEED(clockspeed*2),.FREQ(1)) s1(.clk(clk),.rst(rst),.out(saw_out));
   // putting eg `button1` as `.rst` param produces weird results,
   // so disabling reset by putting constant 0
   pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
@@ -57,6 +59,7 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
     );
 
   reg [15:0] spi_out;
+  reg [15:0] prev_spi_out;
 
   MYSPI myspi(.clk(clk),.cfg_cs(cfg_cs), 
     .cfg_si(cfg_si),
@@ -64,7 +67,8 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
     .cfg_so(cfg_so),
     .data16(spi_out));
 
-  wire amp_in;
+  wire gate;
+  wire [9:0] amp_in;
   wire [9:0] amp_out;
   Amp amp(.clk(clk),.in(sine_out),.amp(amp_in),.out(amp_out));
   
@@ -75,7 +79,9 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 
    always @(posedge clk) begin
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
-    amp_in <= spi_out > 0;
+    amp_in <= spi_out > 0 ? 1023 : 0 ;
+	rst = prev_spi_out != spi_out ? 1 : 0;
+	prev_spi_out = spi_out;
   end		
 		
 endmodule		// end top module

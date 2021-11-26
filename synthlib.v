@@ -1,12 +1,12 @@
 module Amp(
   input clk,
-  input wire amp,
+  input wire[9:0] amp,
   input wire[9:0] in,
   output reg[9:0] out
 );
 parameter MAX_AMP = 1024;
 always @(posedge clk) begin
-  out <= in * amp;
+  out <= ( in * amp ) /1024;
 end
 
 endmodule
@@ -62,7 +62,7 @@ module square(input clk, output reg[9:0] out);
   end
 endmodule
 
-module saw (input clk, output reg[9:0] out);
+module saw (input clk, input rst, output reg[9:0] out);
 parameter NBITS = 10;
 parameter CLKSPEED = 100_000_000;// clockspeed of Nexys A7
 parameter FREQ = 440; // something audiable
@@ -76,7 +76,7 @@ reg[26:0] clk_counter = 0;
 reg[NBITS-1:0] amp = AMPMAX;
 
 always@(posedge clk) begin
-
+    if (rst) amp <= AMPMAX;
     if (clk_counter < CLKDIV) clk_counter <= clk_counter+1;
     else begin
         clk_counter <= 0;
