@@ -20,12 +20,20 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 	wire clk; 
   SB_HFOSC inthosc ( .CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(clk) );
  
+  reg [23:0] pin_state_out ;
+  wire [23:0] pin_state_in;
+  reg  [23:0] out_eneable_cfg;
+
+//   assign  pin_state_out = 24'h0;
+//   assign  out_eneable_cfg = 24'h0;
+
   // configure/connect IO Pins for LED driver logic
   SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) led_io1 ( .PACKAGE_PIN(kled[0]), .OUTPUT_ENABLE(kled_tri[0]), .D_OUT_0(1'b1)  );  // .D_IN_0(dummy2)
   SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) led_io2 ( .PACKAGE_PIN(kled[1]), .OUTPUT_ENABLE(kled_tri[1]), .D_OUT_0(1'b1)  ); 
   SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) led_io3 ( .PACKAGE_PIN(kled[2]), .OUTPUT_ENABLE(kled_tri[2]), .D_OUT_0(1'b1)  );
   SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) led_io4 ( .PACKAGE_PIN(kled[3]), .OUTPUT_ENABLE(kled_tri[3]), .D_OUT_0(1'b1)  );
   
+  SB_IO #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b0) ) upin_15 	( .PACKAGE_PIN(pinbank2[3]), .OUTPUT_ENABLE(1'b1), .D_OUT_0(pin_state_out[15]) , .D_IN_0(pin_state_in[15]) );
 
 	// Led
 	wire [3:0]  kled_tri;			// connect katode via SB_IO modules to allow high impadance  or 3.3V
@@ -82,6 +90,11 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
     amp_in <= spi_out > 0 ? 1023 : 0 ;
 	rst = prev_spi_out != spi_out ? 1 : 0;
 	prev_spi_out = spi_out;
+	pin_state_out[15] <= LED2;
+
+	// for some reason, assigning LED1 will make both data16 constantly 32 and pin_state_pit[15] constantly on ...
+	pin_state_out[15] <= LED2;
+
   end		
 		
 endmodule		// end top module
