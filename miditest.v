@@ -59,7 +59,7 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
   
   
   
-  sine_gen#(.CLKSPEED(clockspeed), .FREQ(4), .MAX_FREQ_MOD(1024) ) 
+  sine_gen#(.CLKSPEED(clockspeed), .FREQ(500), .MAX_FREQ_MOD(1024) ) 
   s2(
     .clk(clk),
     .freq_mod(saw_out),
