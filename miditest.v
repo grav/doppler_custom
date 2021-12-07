@@ -75,7 +75,6 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
     .cfg_so(cfg_so),
     .data16(spi_out));
 
-  wire gate;
   wire [9:0] amp_in;
   wire [9:0] amp_out;
   Amp amp(.clk(clk),.in(sine_out),.amp(amp_in),.out(amp_out));
