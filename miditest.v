@@ -89,7 +89,6 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
     amp_in <= spi_out > 0 ? 1023 : 0 ;
 	rst = prev_spi_out != spi_out ? 1 : 0;
 	prev_spi_out = spi_out;
-	pin_state_out[15] <= LED2;
 
 	// for some reason, assigning LED1 will make both data16 constantly 32 and pin_state_pit[15] constantly on ...
 	pin_state_out[15] <= LED2;
