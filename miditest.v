@@ -39,13 +39,23 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 	wire [3:0]  kled_tri;			// connect katode via SB_IO modules to allow high impadance  or 3.3V
 	wire [15:0] data16	;			// data register for 16 leds
  	
+  wire LED1;
+  wire LED2;
 	 
+  reg [15:0] spi_out;
+  reg [15:0] prev_spi_out;
+
+  MYSPI myspi(.clk(clk),.cfg_cs(cfg_cs), 
+    .cfg_si(cfg_si),
+    .cfg_sck(cfg_sck),
+    .cfg_so(cfg_so),
+    .data16(spi_out));
+
+  wire [9:0] amp_in;
   wire [9:0] saw_out;
   wire [9:0] sine_out;
   wire [9:0] pdm_sine_err;
   wire [9:0] pdm_saw_err;
-  wire LED1;
-  wire LED2;
 
   localparam clockspeed = 50_000_000;
 
@@ -59,46 +69,33 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
   
   
   
-  sine_gen#(.CLKSPEED(clockspeed), .FREQ(500), .MAX_FREQ_MOD(1024) ) 
+  sine_gen#(.CLKSPEED(clockspeed), .FREQ(10), .MAX_FREQ_MOD(1024) ) 
   s2(
     .clk(clk),
     .freq_mod(saw_out),
     .out(sine_out)
     );
 
-  reg [15:0] spi_out;
-  reg [15:0] prev_spi_out;
-
-  MYSPI myspi(.clk(clk),.cfg_cs(cfg_cs), 
-    .cfg_si(cfg_si),
-    .cfg_sck(cfg_sck),
-    .cfg_so(cfg_so),
-    .data16(spi_out));
-
-  wire [9:0] amp_in;
   wire [9:0] amp_out;
   Amp amp(.clk(clk),.in(sine_out),.amp(amp_in),.out(amp_out));
-  
   pdm p2(.clk(clk),.din(amp_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
   
+  LED16  myleds (.clk(clk),	.ledbits(data16)	,  .aled(aled), .kled_tri(kled_tri) );
 
-	 LED16  myleds (.clk(clk),	.ledbits(data16)	,  .aled(aled), .kled_tri(kled_tri) );
-
-   always @(posedge clk) begin
+  always @(posedge clk) begin
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
     amp_in <= spi_out > 0 ? 1023 : 0 ;
-	rst = prev_spi_out != spi_out ? 1 : 0;
-	prev_spi_out = spi_out;
+    rst = prev_spi_out != spi_out ? 1 : 0;
+    prev_spi_out = spi_out;
 
-	// for some reason, assigning LED1 will make both data16 constantly 32 and pin_state_pit[15] constantly on ...
-	pin_state_out[15] <= LED2;
-
+    // for some reason, assigning LED1 will make both data16 constantly 32 and pin_state_pit[15] constantly on ...
+    pin_state_out[15] <= LED2;
   end		
 		
 endmodule		// end top module
 
 
-module Synth (input [15:0] amp_in, output out);
+module Synth (input [15:0] amp_in, output out, output aux_out1);
 
 
 endmodule 
