@@ -99,6 +99,11 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 endmodule		// end top module
 
 
+module Synth (input [15:0] amp_in, output out);
+
+
+endmodule 
+
 // LED 4x4 Matrix
 // we need to use tri state outputs to avoid bad polarity for LED´s 
 // just set Pins to static 1 and control by output_enable wire 
