@@ -51,36 +51,11 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
     .cfg_so(cfg_so),
     .data16(spi_out));
 
-  wire [9:0] amp_in;
-  wire [9:0] saw_out;
-  wire [9:0] sine_out;
-  wire [9:0] pdm_sine_err;
-  wire [9:0] pdm_saw_err;
-
-  localparam clockspeed = 50_000_000;
-
-  wire rst;
-
-  // douple clock speed to get lower than 1 freq (0.5Hz)
-  saw #(.CLKSPEED(clockspeed*2),.FREQ(1)) s1(.clk(clk),.rst(rst),.out(saw_out));
-  // putting eg `button1` as `.rst` param produces weird results,
-  // so disabling reset by putting constant 0
-  pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
-  
-  
-  
-  sine_gen#(.CLKSPEED(clockspeed), .FREQ(10), .MAX_FREQ_MOD(1024) ) 
-  s2(
-    .clk(clk),
-    .freq_mod(saw_out),
-    .out(sine_out)
-    );
-
-  wire [9:0] amp_out;
-  Amp amp(.clk(clk),.in(sine_out),.amp(amp_in),.out(amp_out));
-  pdm p2(.clk(clk),.din(amp_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
-  
   LED16  myleds (.clk(clk),	.ledbits(data16)	,  .aled(aled), .kled_tri(kled_tri) );
+
+  wire [9:0] amp_in;
+  wire rst;
+  Synth mysynth(.clk(clk), .gate(rst), .amp_in(amp_in), .dout(LED2), .aux_out1(LED1));
 
   always @(posedge clk) begin
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
@@ -95,9 +70,34 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 endmodule		// end top module
 
 
-module Synth (input [15:0] amp_in, output out, output aux_out1);
+module Synth (input clk, input gate, input [15:0] amp_in, output dout, output aux_out1);
+
+  wire [9:0] saw_out;
+  wire [9:0] sine_out;
+  wire [9:0] pdm_sine_err;
+  wire [9:0] pdm_saw_err;
+
+  localparam clockspeed = 50_000_000;
 
 
+  // douple clock speed to get lower than 1 freq (0.5Hz)
+  saw #(.CLKSPEED(clockspeed*2),.FREQ(1)) s1(.clk(clk),.rst(gate),.out(saw_out));
+  // putting eg `button1` as `.rst` param produces weird results,
+  // so disabling reset by putting constant 0
+  pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(aux_out1),.error(pdm_saw_err));    
+  
+  
+  
+  sine_gen#(.CLKSPEED(clockspeed), .FREQ(10), .MAX_FREQ_MOD(1024) ) 
+  s2(
+    .clk(clk),
+    .freq_mod(saw_out),
+    .out(sine_out)
+    );
+
+  wire [9:0] amp_out;
+  Amp amp(.clk(clk),.in(sine_out),.amp(amp_in),.out(amp_out));
+  pdm p2(.clk(clk),.din(amp_out),.rst(0),.dout(dout),.error(pdm_sine_err)); 
 endmodule 
 
 // LED 4x4 Matrix
