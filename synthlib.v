@@ -35,7 +35,7 @@ always @(posedge clk)
 begin
   // clk_div <=11482;// (CLKSPEED / SIZE * MAX_FREQ_MOD) / (freq_mod * FREQ);
   // clk_div <= (CLKSPEED / SIZE * MAX_FREQ_MOD) / (512 * FREQ);
-  clk_div <= 50000000 / (freq_mod * FREQ);
+  clk_div <= CLKSPEED / (freq_mod * FREQ);
 end
 
 always@(posedge clk)
