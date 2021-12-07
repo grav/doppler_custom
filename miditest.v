@@ -72,6 +72,9 @@ endmodule		// end top module
 
 
 module Synth (input clk, input gate, input [15:0] amp_in, output dout, output aux_out1);
+  
+  // for some reason, we need to set clock here - seems parameter is ignored
+  // when initiating Synth module
   parameter CLKSPEED = 50_000_000;// clockspeed of Nexys A7
 
   wire [9:0] saw_out;
