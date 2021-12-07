@@ -19,7 +19,7 @@ module Synth (input clk, input gate, input [15:0] amp_in, output dout, output au
   
   
   
-  sine_gen#(.CLKSPEED(CLKSPEED), .FREQ(10), .MAX_FREQ_MOD(1024) ) 
+  sine_gen#(.CLKSPEED(CLKSPEED), .FREQ(500), .MAX_FREQ_MOD(1024) ) 
   s2(
     .clk(clk),
     .freq_mod(saw_out),

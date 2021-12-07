@@ -2,4 +2,4 @@
 *.blif
 *.rpt
 *.h
-
+synth_vivado
