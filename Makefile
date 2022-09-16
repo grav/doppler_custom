@@ -6,11 +6,16 @@ DEVICE = up5k
 all: $(PROJ).rpt $(PROJ).bin header
 
 %.blif: %.v
-
 	yosys -v 3 -p 'synth_ice40  -top top -blif $@' $< util.v synthlib.v synth.v
 
-%.asc: $(PIN_DEF) %.blif
-	arachne-pnr -d 5k  -o $@ -p $^ -P sg48
+%.json: %.v
+	yosys -v 3 -p 'synth_ice40  -top top -json $@' $< util.v synthlib.v synth.v
+
+#%.asc: $(PIN_DEF) %.blif
+#	arachne-pnr -d 5k  -o $@ -p $^ -P sg48
+
+%.asc: %.json
+	nextpnr-ice40 --up5k --asc $@ --json $< --pcf $(PIN_DEF) --package sg48
 
 header: $(PROJ).bin
 	xxd -i $(PROJ).bin  > $(PROJ)_arduino/$(PROJ).h
