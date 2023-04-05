@@ -1,4 +1,4 @@
-.PRECIOUS: %.blif  # ADD THIS LINE
+.PRECIOUS: %.blif %.json # ADD THIS LINE
 PROJ = doppler_custom
 PIN_DEF = doppler.pcf
 DEVICE = up5k
@@ -37,6 +37,6 @@ sudo-prog: $(PROJ).bin
 	iCEburn.py  -e -v -w  $<
 
 clean:
-	rm -f $(PROJ).blif $(PROJ).asc $(PROJ).rpt $(PROJ).bin $(PROJ)_arduino/$(PROJ).h
+	rm -f $(PROJ).blif $(PROJ).asc $(PROJ).rpt $(PROJ).bin $(PROJ)_arduino/$(PROJ).h $(PROJ).json
 
 .PHONY: all prog clean
