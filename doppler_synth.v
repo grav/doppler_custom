@@ -9,6 +9,7 @@ module top (
   output cfg_so, // SPI Out
   inout pa19, inout pa21, inout pa22,// alternat SPI Port
   inout pa20,
+  // Pins
   inout F25, F32
 );            
  
@@ -30,40 +31,25 @@ module top (
   wire [9:0] sine_out;
   wire [9:0] pdm_sine_err;
   wire [9:0] pdm_saw_err;
+
+  // could be used instead of pins, to visualize
   wire LED1;
   wire LED2;
 
   localparam clockspeed = 50_000_000;
 
-//   // douple clock speed to get lower than 1 freq (0.5Hz)
-//   saw #(.CLKSPEED(clockspeed*2),.FREQ(1)) s1(.clk(clk),.out(saw_out));
-//   // putting eg `button1` as `.rst` param produces weird results,
-//   // so disabling reset by putting constant 0
-//   pdm p1(.clk(clk),.din(saw_out),.rst(0),.dout(LED1),.error(pdm_saw_err));    
-  
-  
-  
-//   sine_gen#(.CLKSPEED(clockspeed), .FREQ(4), .MAX_FREQ_MOD(1024) ) 
-//   s2(
-//     .clk(clk),
-//     .freq_mod(saw_out),
-//     .out(sine_out)
-//     );
-  
-//   pdm p2(.clk(clk),.din(sine_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
-  
   LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
 
-  // putting eg `button1` as `.gate` param produces weird results,
-  // so disabling reset by putting constant 0
 
-    Synth #(.CLKSPEED(clockspeed), .SINE_FREQ(1000)) 
+    Synth #(.CLKSPEED(clockspeed), .SINE_FREQ(1000),.SAW_FREQ(2)) 
     s(
         .clk(clk),
+  // putting eg `button1` as `.gate` param produces weird results,
+  // so disabling reset by putting constant 0
         .gate(0),
         .amp_in(1023),
         .dout(F32), 
-        .aux_out1(F25));
+        .aux_out1(LED1));
 
   always @(posedge clk) begin
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
