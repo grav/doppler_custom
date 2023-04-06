@@ -36,12 +36,12 @@ module top (
   wire LED1;
   wire LED2;
 
-  localparam clockspeed = 50_000_000;
+  localparam clockspeed = 48_000_000;
 
   LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
 
 
-    Synth #(.CLKSPEED(clockspeed), .SINE_FREQ(1000),.SAW_FREQ(2)) 
+    Synth #(.CLKSPEED(clockspeed), .SINE_FREQ(880),.SAW_FREQ(1)) 
     s(
         .clk(clk),
   // putting eg `button1` as `.gate` param produces weird results,
