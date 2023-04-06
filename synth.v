@@ -3,6 +3,7 @@ module Synth (input clk, input gate, input [15:0] amp_in, output dout, output au
   // for some reason, we need to set clock here - seems parameter is ignored
   // when initiating Synth module
   parameter CLKSPEED = 50_000_000;// clockspeed of Nexys A7
+  parameter SINE_FREQ = 440;
 
   wire [9:0] saw_out;
   wire [9:0] sine_out;
@@ -19,7 +20,7 @@ module Synth (input clk, input gate, input [15:0] amp_in, output dout, output au
   
   
   
-  sine_gen#(.CLKSPEED(CLKSPEED), .FREQ(500), .MAX_FREQ_MOD(1024) ) 
+  sine_gen#(.CLKSPEED(CLKSPEED), .FREQ(SINE_FREQ), .MAX_FREQ_MOD(1024) ) 
   s2(
     .clk(clk),
     .freq_mod(saw_out),
