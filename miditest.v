@@ -56,7 +56,7 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
   wire [9:0] amp_in;
   wire rst;
   localparam clockspeed = 50_000_000;
-  Synth #(.CLKSPEED(clockspeed)) mysynth(.clk(clk), .gate(rst), .amp_in(1023), .dout(LED2), .aux_out1(LED1));
+  Synth #(.CLKSPEED(clockspeed)) mysynth(.clk(clk), .gate(rst), .amp_in(1023), .dout(F32), .aux_out1(LED1));
 
   always @(posedge clk) begin
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
