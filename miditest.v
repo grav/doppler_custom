@@ -39,7 +39,9 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
 	wire [3:0]  kled_tri;			// connect katode via SB_IO modules to allow high impadance  or 3.3V
 	wire [15:0] data16	;			// data register for 16 leds
  	
+  // saw amp (frequency modulator)
   wire LED1;
+  // midi on/off
   wire LED2;
 	 
   reg [15:0] spi_out;
@@ -56,16 +58,19 @@ module top ( inout  [7:0] pinbank1,													// breakout io pins F11,  F12 , 
   wire [9:0] amp_in;
   wire rst;
   localparam clockspeed = 50_000_000;
-  Synth #(.CLKSPEED(clockspeed)) mysynth(.clk(clk), .gate(rst), .amp_in(1023), .dout(F32), .aux_out1(LED1));
+  Synth #(.CLKSPEED(clockspeed)) mysynth(.clk(clk), .gate(rst), .amp_in(amp_in), .dout(F32), .aux_out1(LED1));
 
   always @(posedge clk) begin
+	LED2 <= spi_out > 0 ? 1 : 0 ;
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
     amp_in <= spi_out > 0 ? 1023 : 0 ;
-    rst = prev_spi_out != spi_out ? 1 : 0;
+	// comment in to reset freq mod on each note-on
+    //rst = prev_spi_out != spi_out ? 1 : 0;
     prev_spi_out = spi_out;
 
+	// Not sure what this is? -mikkel
     // for some reason, assigning LED1 will make both data16 constantly 32 and pin_state_pit[15] constantly on ...
-    pin_state_out[15] <= LED2;
+    //pin_state_out[15] <= LED2;
   end		
 		
 endmodule		// end top module
@@ -104,40 +109,40 @@ module LED16 (input wire clk, input  [15:0] ledbits , output reg  [3:0] aled ,  
 	end
 endmodule
 
-/**
- * PLL configuration
- *
- * This Verilog module was generated automatically
- * using the icepll tool from the IceStorm project.
- * Use at your own risk.
- *
- * icepll -i 48 -o 100 -m -f pll.v
- *
- * Given input frequency:        60.000 MHz
- * Requested output frequency:  100.000 MHz
- * Achieved output frequency:   100.000 MHz
- */
+// /**
+//  * PLL configuration
+//  *
+//  * This Verilog module was generated automatically
+//  * using the icepll tool from the IceStorm project.
+//  * Use at your own risk.
+//  *
+//  * icepll -i 48 -o 100 -m -f pll.v
+//  *
+//  * Given input frequency:        60.000 MHz
+//  * Requested output frequency:  100.000 MHz
+//  * Achieved output frequency:   100.000 MHz
+//  */
 
-module pll(
-	input  clock_in,
-	output clock_out,
-	output locked
-	);
+// module pll(
+// 	input  clock_in,
+// 	output clock_out,
+// 	output locked
+// 	);
 
 
-SB_PLL40_CORE #(
-		.FEEDBACK_PATH("SIMPLE"),
-		.DIVR(4'b0010),		// DIVR =  2
-		.DIVF(7'b0111111),	// DIVF = 63
-		.DIVQ(3'b110),		// DIVQ =  6
-		.FILTER_RANGE(3'b001)	// FILTER_RANGE = 1
-	) uut (
-		.LOCK(locked),
-		.RESETB(1'b1),
-		.BYPASS(1'b0),
-		.REFERENCECLK(clock_in),
-		.PLLOUTCORE(clock_out)
-		);
+// SB_PLL40_CORE #(
+// 		.FEEDBACK_PATH("SIMPLE"),
+// 		.DIVR(4'b0010),		// DIVR =  2
+// 		.DIVF(7'b0111111),	// DIVF = 63
+// 		.DIVQ(3'b110),		// DIVQ =  6
+// 		.FILTER_RANGE(3'b001)	// FILTER_RANGE = 1
+// 	) uut (
+// 		.LOCK(locked),
+// 		.RESETB(1'b1),
+// 		.BYPASS(1'b0),
+// 		.REFERENCECLK(clock_in),
+// 		.PLLOUTCORE(clock_out)
+// 		);
 
-endmodule
+// endmodule
 
