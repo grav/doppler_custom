@@ -41,17 +41,22 @@ module top (
   LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
 
 
-    Synth #(.CLKSPEED(clockspeed), .SINE_FREQ(880),.SAW_FREQ(1)) 
+    Synth #(.CLKSPEED(clockspeed), .SINE_FREQ(880),.SAW_FREQ(2)) 
     s(
         .clk(clk),
   // putting eg `button1` as `.gate` param produces weird results,
   // so disabling reset by putting constant 0
         .gate(0),
         .amp_in(1023),
-        .dout(F32), 
-        .aux_out1(LED1));
+        // output signal on one pin
+        .dout(F32),
+        // freq control signal on another 
+        .aux_out1(F25));
 
   always @(posedge clk) begin
+    // hack - copy freq control signal to LED1 
+    // to show amplitude visually
+    LED1 <= F25;
     data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
   end
   
