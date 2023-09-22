@@ -34,29 +34,17 @@ module top (
   wire LED2;
 
   localparam clockspeed = 50_000_000;
-  
-  sine_gen#(.CLKSPEED(clockspeed), .FREQ(4), .MAX_FREQ_MOD(1024) ) 
-  s2(
-    .clk(clk),
-    .freq_mod(0),
-    .out(sine_out)
-    );
-  
-  // pdm p2(.clk(clk),.din(sine_out),.rst(0),.dout(LED2),.error(pdm_sine_err)); 
-  
-  // LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
 
-  Blink myblink (.clk(clk), .ledbits(0),.kled_tri(kled_tri));
+  Blink myblink (.clk(clk),.kled_tri(kled_tri));
 
   always @(posedge clk) begin
-    F25 <= LED2;
-    // data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0); 
+    // F25 <= LED2;
     
   end
   
 endmodule  // end top module
 
-module Blink (input wire clk, input  [15:0] ledbits ,  output reg  [3:0] kled_tri );
+module Blink (input wire clk ,  output reg  [3:0] kled_tri );
  reg led_on; 
  reg [25:0] counter; 
  always @(posedge clk) begin
