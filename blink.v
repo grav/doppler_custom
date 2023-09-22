@@ -36,7 +36,7 @@ module Blink (input wire clk ,  output reg  [3:0] kled_tri );
  end
  
  // Just blink  
- always @(posedge counter[25]) begin // do the logic
+ always @(posedge counter[22]) begin // do the logic
   led_on = !led_on;
   kled_tri[3:0] <= led_on ? 4'b0001 :  4'd0;
  end
