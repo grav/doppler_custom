@@ -46,7 +46,7 @@ module top (
   
   // LED16 myleds (.clk(clk), .ledbits(data16), .aled(aled), .kled_tri(kled_tri));
 
-  Blink myblink (.clk(clk), .ledbits(data16),.aled(aled),.kled_tri(kled_tri));
+  Blink myblink (.clk(clk), .ledbits(0),.kled_tri(kled_tri));
 
   always @(posedge clk) begin
     F25 <= LED2;
@@ -56,7 +56,7 @@ module top (
   
 endmodule  // end top module
 
-module Blink (input wire clk, input  [15:0] ledbits , output reg  [3:0] aled ,  output reg  [3:0] kled_tri );
+module Blink (input wire clk, input  [15:0] ledbits ,  output reg  [3:0] kled_tri );
  reg led_on; 
  reg [25:0] counter; 
  always @(posedge clk) begin
