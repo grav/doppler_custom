@@ -1,9 +1,10 @@
 `default_nettype none
 
 module top ( 
-  output  [3:0] kled, output [3:0] aled, // led matrix  see the .pcf file in projectfolder for physical pins
-  input cfg_cs, input  cfg_si, input cfg_sck, // SPI:     samd51 <-> ice40  for bitstream and user cases
-
+  // led matrix  see the .pcf file in projectfolder for physical pins
+  // Gotcha: removing aled here stops blinking from working, eventhough aled doesn't seem to be in use(!)
+  output [3:0] kled,
+  output [3:0] aled,
 );            
  
   // use ice40up5k 48Mhz internal oscillator
