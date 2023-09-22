@@ -1,15 +1,9 @@
 `default_nettype none
 
 module top ( 
-  inout [7:0] pinbank1, // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
-  inout  [7:0] pinbank2, // breakout io pins F41,  F40 , F39, F38, F37, F36, F35, F34
   output  [3:0] kled, output [3:0] aled, // led matrix  see the .pcf file in projectfolder for physical pins
-  input button1, input button2, // 2 Buttons 
   input cfg_cs, input  cfg_si, input cfg_sck, // SPI:     samd51 <-> ice40  for bitstream and user cases
-  output cfg_so, // SPI Out
-  inout pa19, inout pa21, inout pa22,// alternat SPI Port
-  inout pa20,
-  inout F25, F32
+
 );            
  
   // use ice40up5k 48Mhz internal oscillator
