@@ -5,6 +5,9 @@ module top (
   // Gotcha: removing aled here stops blinking from working, eventhough aled doesn't seem to be in use(!)
   output [3:0] kled,
   output [3:0] aled,
+  // defined in doppler.pcf
+  inout F25,
+
 );            
  
   // use ice40up5k 48Mhz internal oscillator
@@ -23,8 +26,8 @@ module top (
   Blink myblink (.clk(clk),.kled_tri(kled_tri));
 
   always @(posedge clk) begin
-    // F25 <= LED2;
-    
+    // Assign a voltage to pin F25
+    F25 <= kled_tri > 0 ? 1 : 0;
   end
   
 endmodule  // end top module
