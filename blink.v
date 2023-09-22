@@ -24,16 +24,6 @@ module top (
   
   // Led
   wire [3:0] kled_tri;   // connect katode via SB_IO modules to allow high impadance  or 3.3V
-  reg [15:0] data16 ;   // data register for 16 leds
-   
-  wire [9:0] saw_out;
-  wire [9:0] sine_out;
-  wire [9:0] pdm_sine_err;
-  wire [9:0] pdm_saw_err;
-  wire LED1;
-  wire LED2;
-
-  localparam clockspeed = 50_000_000;
 
   Blink myblink (.clk(clk),.kled_tri(kled_tri));
 
