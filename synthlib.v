@@ -76,6 +76,7 @@ reg[26:0] clk_counter = 0;
 reg[NBITS-1:0] amp = AMPMAX;
 
 always@(posedge clk) begin
+  if (FREQ != 0) begin
     if (rst) amp <= AMPMAX;
     if (clk_counter < CLKDIV) clk_counter <= clk_counter+1;
     else begin
@@ -83,6 +84,7 @@ always@(posedge clk) begin
         if (amp  > 0) amp <= amp - 1;
         else amp <= AMPMAX;
     end
+  end
     
 end
 always@(posedge clk) begin

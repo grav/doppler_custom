@@ -6,7 +6,7 @@ DEVICE = up5k
 all: $(PROJ).rpt $(PROJ).bin header
 
 %.blif: %.v
-	yosys -v 3 -p 'synth_ice40  -top top -blif $@' $< util.v synthlib.v synth.v
+	yosys -v 3 -p 'synth_ice40  -top top -blif $@' $< util.v synthlib.v synth.v led16.v
 
 %.json: %.v
 	yosys -v 3 -p 'synth_ice40  -top top -json $@' $< util.v synthlib.v synth.v

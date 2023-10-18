@@ -22,5 +22,37 @@ Eg: `$ PROJ=doppler_custom ./make.sh` FPGA project in [doppler_custom.v](doppler
 arduino project in [doppler_custom_arduino/doppler_custom_arduino.ino](doppler_custom_arduino/doppler_custom_arduino.ino)
 
 Or: `$ PROJ=miditest ./make.sh`
- 
-`playmidi.sh` - play a midi file to the Doppler
+
+
+## projs
+
+### synth.v
+
+A sine-wav, frequence modulated by a saw wave
+
+### miditest.v
+
+Turns the Doppler into a midi-enabled synth (really just enables Midi on and Midi off for now).
+
+Requires the [MIDIUSB.h](https://www.arduinolibraries.info/libraries/midiusb) library installed, which makes the Doppler expose a MIDI device over USB.
+
+Install like this:
+
+```
+arduino-cli lib install MIDIUSB
+```
+
+
+After the Arduino project has been uploaded to the Doppler, check that the midi device is active:
+
+```
+$ aplaymidi --list
+ Port    Client name                      Port name
+ 14:0    Midi Through                     Midi Through Port-0
+ 20:0    doppler                          doppler MIDI 1
+ ```
+
+The `playmidi.sh` script continuously plays the `miditest.mid` file on the 
+Doppler.
+
+For now it just turns amp on/off on midi on/off.
