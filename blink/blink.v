@@ -6,7 +6,7 @@ module top (
   output [3:0] kled,
   output [3:0] aled,
   // defined in doppler.pcf
-  inout F25,
+  output F25,
 
 );            
  
