@@ -1,4 +1,4 @@
-`default_nettype none
+//`default_nettype none
 
 module top ( 
   // led matrix  see the .pcf file in projectfolder for physical pins
@@ -26,13 +26,13 @@ module top (
 
   always @(posedge clk) begin
     counter<=counter+1 ; 
-  end
-  
-  always @(posedge counter[22]) begin
-    led_on = !led_on;
-    kled_tri <= led_on ? 1 : 0;
+    if (counter == 0) begin
+      led_on = !led_on;
+      kled_tri <= led_on ? 1 : 0;
       // Assign a voltage to pin F25
-    F25 <= kled_tri > 0 ? 1 : 0;
+      F25 <= kled_tri > 0 ? 1 : 0;
+    end
+
   end
   
 endmodule  // end top module
