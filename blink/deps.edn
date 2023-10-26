@@ -1,0 +1,2 @@
+{:deps {com.github.m1kal/charbel {:mvn/version "0.1.10"}}
+ :paths ["."]}
