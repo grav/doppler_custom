@@ -19,7 +19,7 @@ module top (
 
   // configure/connect IO Pins for LED driver logic
   SB_IO 
-    //#( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) 
+    #( .PIN_TYPE(6'b 1010_01), .PULLUP(1'b 0) ) 
     led_io1 ( .PACKAGE_PIN(kled[0]), .OUTPUT_ENABLE(kled_tri), .D_OUT_0(1'b1)  );  // .D_IN_0(dummy2)
   
 
