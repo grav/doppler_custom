@@ -10,7 +10,7 @@ FQBN="dadamachines - M4:samd:doppler"
 
 PORT="/dev/ttyACM0"
 
-yosys -v 3 -p 'synth_ice40 -top top -blif blink.blif' blink.v
+yosys -v 3 -p 'synth_ice40 -top top -blif blink.blif' top.v blink.v
 
 arachne-pnr -d 5k -o blink.asc -p doppler.pcf blink.blif -P sg48
 
