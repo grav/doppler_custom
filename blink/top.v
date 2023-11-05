@@ -23,6 +23,8 @@ module top (
  
   wire led_on;
 
+  // create a blink module, named 'my_blink', wiring
+  // clk to clk input and led_on to led_on output of module
   blink my_blink(.clk(clk), .led_on(led_on));
 
   always @(posedge clk) begin
