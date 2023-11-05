@@ -56,3 +56,24 @@ The `playmidi.sh` script continuously plays the `miditest.mid` file on the
 Doppler.
 
 For now it just turns amp on/off on midi on/off.
+
+## AArch64
+
+The Doppler requires a few "cores" (confusingly referred to as "Boards" in 
+the Arduino IDE):
+- Adafruit SAMD Boards
+- dadamachines - M4 Boards
+
+This is nicely described here: 
+https://github.com/dadamachines/arduino-board-index/blob/master/README.md
+
+However, the old "Adafruit SAMD Boards" v1.3 isn't compatible with Aarch64, and 
+the Doppler core is hard-wired to use v1.3 (or similar old version).
+
+To fix this, install a newer version of "Adafruit SAMD Boards" (eg 1.7.13), then install the old version of the "dadamachines - M4 Boards" and patch it up, like so:
+
+```
+$ cd ~/.arduino15/packages/dadamachines - M4/hardware/samd/1.3.1
+$ patch < /path/to/doppler_custom/doppler_aarch64_patch.diff
+```
+
