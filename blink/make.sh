@@ -10,9 +10,13 @@ FQBN="dadamachines - M4:samd:doppler"
 
 PORT="/dev/ttyACM0"
 
-yosys -v 3 -p 'synth_ice40 -top top -blif blink.blif' blink.v
+# old toolchain
+#yosys -v 3 -p 'synth_ice40 -top top -blif blink.blif' blink.v
+#arachne-pnr -d 5k -o blink.asc -p doppler.pcf blink.blif -P sg48
 
-arachne-pnr -d 5k -o blink.asc -p doppler.pcf blink.blif -P sg48
+# new toolchain
+yosys -v 3 -p 'synth_ice40 -top top -json blink.json' blink.v
+nextpnr-ice40 --up5k --asc blink.asc --json blink.json --pcf doppler.pcf --package sg48
 
 icepack blink.asc blink.bin
 
