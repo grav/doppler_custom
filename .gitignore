@@ -4,3 +4,4 @@
 *.h
 synth_vivado
 blink/blink.asc
+blink/blink.json
