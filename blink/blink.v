@@ -7,7 +7,7 @@ module blink (
 
 );            
 
-  reg [21:0] counter; 
+  reg [22:0] counter; 
 
   always @(posedge clk) begin
     counter<=counter+1 ; 
