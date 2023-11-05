@@ -1,4 +1,5 @@
-//`default_nettype none
+// No default net type is assumed for undeclared identifiers
+`default_nettype none
 
 module top ( 
   // led matrix  see the .pcf file in projectfolder for physical pins
