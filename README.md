@@ -43,7 +43,7 @@ arduino-cli lib install MIDIUSB
 ```
 
 
-After the Arduino project has been uploaded to the Doppler, check that the midi device is active:
+After the Arduino project has been uploaded to the Doppler, check that the midi device is active with `aplaymidi` (part of the `alsa-utils` package):
 
 ```
 $ aplaymidi --list
