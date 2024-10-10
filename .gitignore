@@ -2,5 +2,6 @@
 *.blif
 *.rpt
 *.h
+*.h-r
 synth_vivado
 blink/blink.asc
