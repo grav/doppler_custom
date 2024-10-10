@@ -80,7 +80,7 @@ Prereqs: `go` and `go-task`
 Mac: 
 
 ```
-$ brew install libftdi
+$ brew install libftdi yosys
 $ gh repo clone https://github.com/YosysHQ/icestorm
 $ ( cd icestorm; make; sudo make install )
 $ gh repo clone git@github.com:YosysHQ/arachne-pnr.git
