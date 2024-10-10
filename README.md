@@ -67,6 +67,11 @@ the Arduino IDE):
 This is nicely described here: 
 https://github.com/dadamachines/arduino-board-index/blob/master/README.md
 
+But it can be done via CLI:
+```
+$ arduino-cli core install adafruit:samd --additional-urls 'https://adafruit.github.io/arduino-board-index/package_adafruit_index.json'
+$ arduino-cli core install 'dadamachines - M4:samd' --additional-urls 'https://grav.github.io/arduino-board-index/package_dadamachines-m4_index.json' # notice I'm using my own index, as it has correct size and checksum, which is necessary for arduino-cli`
+
 However, the old "Adafruit SAMD Boards" v1.3 isn't compatible with Aarch64, and 
 the Doppler core is hard-wired to use v1.3 (or similar old version).
 
