@@ -59,6 +59,20 @@ For now it just turns amp on/off on midi on/off.
 
 ## AArch64
 
+### FPGA tool chain
+
+Mac: 
+
+```
+$ brew install libftdi
+$ gh repo clone https://github.com/YosysHQ/icestorm
+$ ( cd icestorm; make; sudo make install )
+$ gh repo clone git@github.com:YosysHQ/arachne-pnr.git
+$ ( cd arachne-pnr; make; sudo make install )
+```
+
+### Doppler Arduino board
+
 The Doppler requires a few "cores" (confusingly referred to as "Boards" in 
 the Arduino IDE):
 - Adafruit SAMD Boards
