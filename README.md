@@ -26,7 +26,7 @@ Or: `$ PROJ=miditest ./make.sh`
 
 ## projs
 
-### synth.v
+### doppler_synth.v
 
 A sine-wav, frequence modulated by a saw wave
 
