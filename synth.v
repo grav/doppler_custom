@@ -1,10 +1,10 @@
 module Synth (input clk, input gate, input [15:0] amp_in, output dout, output aux_out1);
   
-  // for some reason, we need to set clock here - seems parameter is ignored
-  // when initiating Synth module
+
+  // These are defaults, but can be overridden when initializing a Synth
   parameter CLKSPEED = 50_000_000;// clockspeed of Nexys A7
   parameter SINE_FREQ = 440;
-  parameter SAW_FREQ = 1;
+  parameter SAW_FREQ = 2;
 
 
   wire [9:0] modulator;
