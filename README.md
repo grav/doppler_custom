@@ -57,6 +57,22 @@ Doppler.
 
 For now it just turns amp on/off on midi on/off.
 
+## arduino-cli
+
+The Arduino CLI (`arduino-cli`) was recently updated with a FQBN verification that doesn't support the doppler.
+I have a version that short-circuits the check here: https://github.com/grav/arduino-cli
+
+To build:
+```
+$ gh repo clone arduino-cli grav-arduino-cli
+$ cd grav-arduino-cli
+$ task build # `go-task build` on Linux
+$ cp arduino-cli /path/to/binaries
+```
+
+Prereqs: `go` and `go-task`
+
+
 ## AArch64
 
 ### FPGA tool chain
