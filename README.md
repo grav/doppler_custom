@@ -79,7 +79,9 @@ the Doppler core is hard-wired to use v1.3 (or similar old version).
 To fix this, install a newer version of "Adafruit SAMD Boards" (eg 1.7.13), then install the old version of the "dadamachines - M4 Boards" and patch it up, like so:
 
 ```
-$ cd ~/.arduino15/packages/dadamachines - M4/hardware/samd/1.3.1
+$ cd ~/.arduino15/packages/dadamachines\ -\ M4/hardware/samd/1.3.1 # linux
+$ cd ~/Library/Arduino15/packages/dadamachines\ -\ M4/hardware/samd/1.3.1 # mac
 $ patch < /path/to/doppler_custom/doppler_aarch64_patch.diff
 ```
 
+TODO: Just upload a fixed version of the doppler core
