@@ -66,7 +66,7 @@ To build:
 ```
 $ gh repo clone arduino-cli grav-arduino-cli
 $ cd grav-arduino-cli
-$ task build # `go-task build` on Linux
+$ task build # `go-task build` on Arch Linux
 $ cp arduino-cli /path/to/binaries
 ```
 
