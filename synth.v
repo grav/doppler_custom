@@ -1,4 +1,4 @@
-module Synth (
+module synth (
     input clk,
     input gate,
     input [15:0] amp_in,

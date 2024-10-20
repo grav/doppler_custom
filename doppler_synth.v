@@ -85,7 +85,7 @@ module top (
   );
 
 
-  Synth #(
+  synth #(
       .CLKSPEED (clockspeed),
       .SINE_FREQ(880),
       .SAW_FREQ (2)
