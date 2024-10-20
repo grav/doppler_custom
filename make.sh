@@ -12,8 +12,9 @@ make clean PROJ="$PROJ"; make PROJ="$PROJ"
 ## "Fully qualified board name" and port found with `arduino-cli board list`
 FQBN="dadamachines - M4:samd:doppler"
 
-
+# Port name changes once in a while, especially on Mac
 port=$(arduino-cli board list | grep "$FQBN" |  awk '{print $1}' )
+
 pushd "${PROJ}_arduino" 
 arduino-cli compile --fqbn "$FQBN" 
 if [ -z "$SKIP_UPLOAD" ]; then
