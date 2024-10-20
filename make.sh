@@ -17,7 +17,7 @@ port=$(arduino-cli board list | grep "$FQBN" |  awk '{print $1}' )
 
 pushd "${PROJ}_arduino" 
 arduino-cli compile --fqbn "$FQBN" 
-if [ -z "$SKIP_UPLOAD" ]; then
+if [ -z "${SKIP_UPLOAD+x}" ]; then
     arduino-cli upload --fqbn "$FQBN" --port "$port" 
 else
     echo >&2 "*** Skipping upload"
