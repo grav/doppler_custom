@@ -104,7 +104,7 @@ module top (
       .data16(spi_out)
   );
 
-  LED16 myleds (
+  led16 myleds (
       .clk(clk),
       .ledbits(data16),
       .aled(aled),
@@ -114,7 +114,7 @@ module top (
   wire [9:0] amp_in;
   wire rst;
   localparam clockspeed = 50_000_000;
-  Synth #(
+  synth #(
       .CLKSPEED(clockspeed)
   ) mysynth (
       .clk(clk),

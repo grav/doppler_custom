@@ -112,7 +112,7 @@ module top (
       .error(pdm_sine_err)
   );
 
-  LED16 myleds (
+  led16 myleds (
       .clk(clk),
       .ledbits(data16),
       .aled(aled),

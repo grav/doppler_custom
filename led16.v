@@ -1,7 +1,7 @@
 // LED 4x4 Matrix
 // we need to use tri state outputs to avoid bad polarity for LED´s 
 // just set Pins to static 1 and control by output_enable wire 
-module LED16 (
+module led16 (
     input wire clk,
     input [15:0] ledbits,
     output reg [3:0] aled,

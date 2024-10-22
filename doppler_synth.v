@@ -77,7 +77,7 @@ module top (
 
   localparam clockspeed = 48_000_000;
 
-  LED16 myleds (
+  led16 myleds (
       .clk(clk),
       .ledbits(data16),
       .aled(aled),
