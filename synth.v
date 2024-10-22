@@ -39,7 +39,16 @@ module synth (
       .error(pdm_saw_err)
   );
 
+  wire [9:0] w1;
 
+  sine_gen #(
+      .CLKSPEED(CLKSPEED),
+      .FREQ(110)
+  ) s3 (
+      .clk(clk),
+      .freq_mod(modulator),
+      .out(w1)
+  );
 
   sine_gen #(
       .CLKSPEED(CLKSPEED),
@@ -47,7 +56,7 @@ module synth (
       .MAX_FREQ_MOD(1024)
   ) s2 (
       .clk(clk),
-      .freq_mod(modulator),
+      .freq_mod(w1),
       .out(sine_out)
   );
 
