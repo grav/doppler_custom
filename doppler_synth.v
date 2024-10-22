@@ -1,5 +1,4 @@
 `default_nettype none
-
 module doppler_synth (
     inout [7:0] pinbank1,  // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
     inout [7:0] pinbank2,  // breakout io pins F41,  F40 , F39, F38, F37, F36, F35, F34
@@ -72,7 +71,6 @@ module doppler_synth (
   wire [9:0] pdm_saw_err;
 
   // could be used instead of pins, to visualize
-  wire LED1;
   wire LED2;
 
   localparam clockspeed = 48_000_000;
@@ -101,11 +99,29 @@ module doppler_synth (
       .aux_out1(F25)
   );
 
+  wire w1;
+  wire w2;
+  wire w3;
+
+  sine_gen #(
+    .FREQ(2)
+  ) s1 (
+        .clk(clk),
+        .out(w1)
+    );
+
+    // pdm p2 (
+    //     .clk  (clk),
+    //     .din  (w1),
+    //     .rst  (0),
+    //     .dout (w2),
+    //     .error(w3)
+    // );  
+
   always @(posedge clk) begin
     // hack - copy freq control signal to LED1 
     // to show amplitude visually
-    LED1   <= F25;
-    data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0);
+    data16 <= (F25 ? 32 : 0) + (w1 ? 1024 : 0);
   end
 
 endmodule  // end top module
