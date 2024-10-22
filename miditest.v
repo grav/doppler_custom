@@ -5,7 +5,7 @@
 //		This is the default firmware for ice40up5k doppler board
 //		
 //
-module top (
+module miditest (
     inout  [7:0] pinbank1,  // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
     inout  [7:0] pinbank2,  // breakout io pins F41,  F40 , F39, F38, F37, F36, F35, F34
     output [3:0] kled,
