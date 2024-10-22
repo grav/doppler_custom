@@ -99,29 +99,30 @@ module doppler_synth (
       .aux_out1(F25)
   );
 
-  wire w1;
-  wire w2;
-  wire w3;
+  wire [9:0] w1;
+  wire [9:0] w2;
+  wire [9:0] w3;
 
   sine_gen #(
+    .CLKSPEED(clockspeed),
     .FREQ(2)
   ) s1 (
         .clk(clk),
         .out(w1)
     );
 
-    // pdm p2 (
-    //     .clk  (clk),
-    //     .din  (w1),
-    //     .rst  (0),
-    //     .dout (w2),
-    //     .error(w3)
-    // );  
+    pdm p2 (
+        .clk  (clk),
+        .din  (w1),
+        .rst  (0),
+        .dout (w2),
+        .error(w3)
+    );  
 
   always @(posedge clk) begin
     // hack - copy freq control signal to LED1 
     // to show amplitude visually
-    data16 <= (F25 ? 32 : 0) + (w1 ? 1024 : 0);
+    data16 <= (F25 ? 32 : 0) + (w2 ? 1024 : 0);
   end
 
 endmodule  // end top module
