@@ -1,6 +1,5 @@
 `default_nettype none
-
-module top (
+module doppler_synth (
     inout [7:0] pinbank1,  // breakout io pins F11,  F12 , F13, F18, F19, F20, F21, F23
     inout [7:0] pinbank2,  // breakout io pins F41,  F40 , F39, F38, F37, F36, F35, F34
     output [3:0] kled,
@@ -72,12 +71,11 @@ module top (
   wire [9:0] pdm_saw_err;
 
   // could be used instead of pins, to visualize
-  wire LED1;
   wire LED2;
 
   localparam clockspeed = 48_000_000;
 
-  LED16 myleds (
+  led16 myleds (
       .clk(clk),
       .ledbits(data16),
       .aled(aled),
@@ -104,8 +102,7 @@ module top (
   always @(posedge clk) begin
     // hack - copy freq control signal to LED1 
     // to show amplitude visually
-    LED1   <= F25;
-    data16 <= (LED1 ? 32 : 0) + (LED2 ? 1024 : 0);
+    data16 <= (F25 ? 32 : 0);
   end
 
 endmodule  // end top module
