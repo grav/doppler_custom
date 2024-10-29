@@ -34,15 +34,15 @@ module sine_gen (
   always @(posedge clk) begin
     // clk_div <=11482;// (CLKSPEED / SIZE * MAX_FREQ_MOD) / (freq_mod * FREQ);
     // clk_div <= (CLKSPEED / SIZE * MAX_FREQ_MOD) / (512 * FREQ);
-    clk_div <= CLKSPEED / (freq_mod * FREQ);
+    clk_div <= CLKSPEED / (freq_mod * FREQ) ;
   end
 
   always @(posedge clk) begin
     if (clk_counter < clk_div) clk_counter <= clk_counter + 1;
     else begin
       clk_counter <= 0;
-      i = i + 1;
-      if (i == SIZE) i = 0;
+      i <= i + 1;
+      if (i == SIZE) i <= 0;
     end
   end
 
